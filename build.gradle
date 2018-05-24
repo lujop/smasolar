@@ -35,11 +35,13 @@ repositories {
 dependencies {
     compile group: 'io.netty', name: 'netty-all', version: '4.1.25.Final'
     compile 'com.digitalpetri.modbus:modbus-master-tcp:1.1.0'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+
+    runtime group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 
     testCompile('org.junit.jupiter:junit-jupiter-api:5.2.0')
     testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
     testCompile('org.assertj:assertj-core:3.9.1')
-
 }
 
 test {
