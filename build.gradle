@@ -131,7 +131,7 @@ publishing {
                 classifier "javadoc"
             }
             groupId rootProject.group
-            artifactId rootProject 'smasolarlib'
+            artifactId 'smasolarlib'
             version rootProject.version
             pom.withXml {
                 def root = asNode()
