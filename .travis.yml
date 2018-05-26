@@ -13,9 +13,6 @@ matrix:
 # Java 10 "Oracle JDK"
     - env: JDK='Oracle JDK 10'
       install: . ./install-jdk.sh -F 10 -L BCL
-# Java 10 "OpenJDK"
-    - env: JDK='OpenJDK 10'
-      install: . ./install-jdk.sh -F 10 -L GPL
 
 stages:
   - name: build
@@ -34,8 +31,12 @@ jobs:
         - ./gradlew --version
         - ./gradlew test
     - stage: snapshot
+      env: JDK='Oracle JDK 10'
+      install: . ./install-jdk.sh -F 10 -L BCL
       script:
         - ./gradlew artifactoryPublish -x test -Dsnapshot=true -Dbintray.user=$BINTRAY_USER -Dbintray.key=$BINTRAY_KEY -Dbuild.number=$TRAVIS_BUILD_NUMBER
     - stage: snapshot
+      env: JDK='Oracle JDK 10'
+      install: . ./install-jdk.sh -F 10 -L BCL
       script:
         - ./gradlew artifactoryPublish -x test -Dsnapshot=false -Dbintray.user=$BINTRAY_USER -Dbintray.key=$BINTRAY_KEY -Dbuild.number=$TRAVIS_BUILD_NUMBER
