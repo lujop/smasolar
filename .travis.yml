@@ -18,6 +18,7 @@ matrix:
       install: . ./install-jdk.sh -F 10 -L GPL
 
 script:
+  - echo HI1
   - echo PATH = ${PATH}
   - echo JAVA_HOME = ${JAVA_HOME}
   - java -version
@@ -32,8 +33,12 @@ stages:
 
 jobs:
   include:
+
     - stage: build
       script:
+        - echo PATH = ${PATH}
+        - echo JAVA_HOME = ${JAVA_HOME}
+        - java -version
         - ./gradlew --version
         - ./gradlew test
     - stage: snapshot
