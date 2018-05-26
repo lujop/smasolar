@@ -2,8 +2,10 @@ sudo: false
 dist: trusty
 language: java
 
-jdk:
-  - oraclejdk11
+matrix:
+  include:
+    - jdk: oraclejdk10
+    - jdk: oraclejdk11
 
 stages:
   - name: build
@@ -15,6 +17,7 @@ stages:
 jobs:
   include:
     - stage: build
+      jdk: oraclejdk10
       script:
         - echo PATH = ${PATH}
         - echo JAVA_HOME = ${JAVA_HOME}
@@ -22,8 +25,10 @@ jobs:
         - ./gradlew --version
         - ./gradlew test
     - stage: snapshot
+      jdk: oraclejdk10
       script:
         - ./gradlew artifactoryPublish -x test -Dsnapshot=true -Dbintray.user=$BINTRAY_USER -Dbintray.key=$BINTRAY_KEY -Dbuild.number=$TRAVIS_BUILD_NUMBER
     - stage: snapshot
+      jdk: oraclejdk10
       script:
         - ./gradlew artifactoryPublish -x test -Dsnapshot=false -Dbintray.user=$BINTRAY_USER -Dbintray.key=$BINTRAY_KEY -Dbuild.number=$TRAVIS_BUILD_NUMBER
