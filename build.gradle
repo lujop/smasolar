@@ -96,6 +96,7 @@ artifactory {
     resolve {
         repoKey = 'jcenter'
     }
+    clientConfig.info.setBuildNumber(System.getProperty('build.number'))
 }
 
 

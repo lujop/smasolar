@@ -21,3 +21,23 @@ script:
   - ./gradlew --version
 # Run all tests
   - ./gradlew test
+
+stages:
+  - name: build
+  - name: snapshot
+    if: branch = master
+  - name: release
+    if: branch = release
+
+jobs:
+  include:
+    - stage: build
+      script:
+        - ./gradlew --version
+        - ./gradlew test
+    - stage: snapshot
+      script:
+        - ./gradlew artifactoryPublish -x test -Dsnapshot=true -Dbintray.user=$BINTRAY_USER -Dbintray.key=$BINTRAY_KEY -Dbuild.number=$TRAVIS_BUILD_NUMBER
+    - stage: snapshot
+      script:
+        - ./gradlew artifactoryPublish -x test -Dsnapshot=false -Dbintray.user=$BINTRAY_USER -Dbintray.key=$BINTRAY_KEY -Dbuild.number=$TRAVIS_BUILD_NUMBER
