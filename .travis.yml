@@ -1,11 +1,10 @@
-language: java
-dist: trusty
 sudo: false
+dist: trusty
+language: java
 
-matrix:
-  include:
-    - jdk: oraclejdk10
-    - jdk: oraclejdk11
+jdk:
+  - oraclejdk10
+  - oraclejdk11
 
 stages:
   - name: build
