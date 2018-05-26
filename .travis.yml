@@ -2,6 +2,7 @@ language: java
 
 dist: trusty
 sudo: false
+install: true
 
 # Get latest install-jdk.sh script
 before_install:
@@ -15,6 +16,12 @@ matrix:
 # Java 10 "OpenJDK"
     - env: JDK='OpenJDK 10'
       install: . ./install-jdk.sh -F 10 -L GPL
+
+script:
+  - echo PATH = ${PATH}
+  - echo JAVA_HOME = ${JAVA_HOME}
+  - java -version
+  - ./gradlew --version
 
 stages:
   - name: build
