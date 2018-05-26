@@ -17,13 +17,6 @@ matrix:
     - env: JDK='OpenJDK 10'
       install: . ./install-jdk.sh -F 10 -L GPL
 
-script:
-  - echo HI1
-  - echo PATH = ${PATH}
-  - echo JAVA_HOME = ${JAVA_HOME}
-  - java -version
-  - ./gradlew --version
-
 stages:
   - name: build
   - name: snapshot
@@ -33,8 +26,7 @@ stages:
 
 jobs:
   include:
-
-    - stage: build
+    - stage: test
       script:
         - echo PATH = ${PATH}
         - echo JAVA_HOME = ${JAVA_HOME}
