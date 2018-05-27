@@ -12,18 +12,26 @@ branches:
     - master
     - release
 
+stages:
+  - name: build
+  - name: deploy_snapshot
+    if: branch = master and type = push
+  - name: deploy_release
+    if: branch = release and type = push
+
 jobs:
   include:
-    - env: JDK='Oracle JDK 10'
-      install: . ./install-jdk.sh -F 10 -L BCL
-      script:
-        - ./gradlew --version
-        - ./gradlew test
-    - if: branch = master
-      env: JDK='Oracle JDK 10'
-      install: . ./install-jdk.sh -F 10 -L BCL
-      script: ./gradlew artifactoryPublish -x test -Dsnapshot=true -Dbintray.user=$BINTRAY_USER -Dbintray.key=$BINTRAY_KEY -Dbuild.number=$TRAVIS_BUILD_NUMBER
-    - if: branch = release
-      env: JDK='Oracle JDK 10'
-      install: . ./install-jdk.sh -F 10 -L BCL
-      script: ./gradlew artifactoryPublish -x test -Dsnapshot=false -Dbintray.user=$BINTRAY_USER -Dbintray.key=$BINTRAY_KEY -Dbuild.number=$TRAVIS_BUILD_NUMBER
+    - stage: build
+      - env: JDK='Oracle JDK 10'
+        install: . ./install-jdk.sh -F 10 -L BCL
+        script:
+          - ./gradlew --version
+          - ./gradlew test
+    - stage: deploy_snapshot
+      - env: JDK='Oracle JDK 10'
+        install: . ./install-jdk.sh -F 10 -L BCL
+        script: ./gradlew artifactoryPublish -x test -Dsnapshot=true -Dbintray.user=$BINTRAY_USER -Dbintray.key=$BINTRAY_KEY -Dbuild.number=$TRAVIS_BUILD_NUMBER
+    - stage: deploy_release
+      - env: JDK='Oracle JDK 10'
+        install: . ./install-jdk.sh -F 10 -L BCL
+        script: ./gradlew artifactoryPublish -x test -Dsnapshot=false -Dbintray.user=$BINTRAY_USER -Dbintray.key=$BINTRAY_KEY -Dbuild.number=$TRAVIS_BUILD_NUMBER
