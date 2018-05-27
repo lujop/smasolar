@@ -11,25 +11,31 @@ buildscript {
 }
 
 
+plugins {
+    id "com.jfrog.artifactory" version "4.5.4"
+    id "maven-publish"
+    id "java"
+}
 
-apply plugin: 'java'
 apply plugin: 'com.diffplug.gradle.spotless'    //Check sources are correctly formatted
 
 
 group = 'cat.joanpujol.smasolar'
 version = '0.0.1-SNAPSHOT'
 
-
 tasks.withType(JavaCompile) {
     sourceCompatibility = 1.10
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
+    jcenter()
     maven {
         url "https://maven.mangoautomation.net/repository/ias-release/"
     }
 }
+
 
 
 dependencies {
@@ -53,6 +59,88 @@ test {
 
     reports {
         html.enabled = true
+    }
+}
+
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+javadoc.failOnError = false
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+artifactory {
+    contextUrl = 'http://oss.jfrog.org'
+    publish {
+        repository {
+            repoKey = 'oss-snapshot-local'
+            username = System.getProperty('bintray.user')
+            password = System.getProperty('bintray.key')
+        }
+        defaults {
+            publications('mavenPublication')    // References publishing.publications
+            publishArtifacts = true
+            publishPom = true
+        }
+    }
+    resolve {
+        repoKey = 'jcenter'
+    }
+    clientConfig.info.setBuildNumber(System.getProperty('build.number'))
+}
+
+
+def pomConfig = {
+    licenses {
+        license {
+            name "GNU General Public License v3.0"
+            url "https://www.gnu.org/licenses/gpl-3.0.en.html"
+            distribution "repo"
+        }
+    }
+    developers {
+        developer {
+            id "lujop"
+            name "Joan Pujol"
+        }
+    }
+
+    scm {
+        url "https://github.com/lujop/smasolarlib.git"
+    }
+}
+
+publishing {
+    publications {
+        mavenPublication(MavenPublication) {
+            from components.java
+            artifact sourcesJar {
+                classifier "sources"
+            }
+            artifact javadocJar {
+                classifier "javadoc"
+            }
+            groupId rootProject.group
+            artifactId 'smasolarlib'
+            version rootProject.version
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'A library with interface to some sma devices')
+                root.appendNode('name', 'smasolarlib')
+                root.appendNode('url', 'https://github.com/lujop/smasolarlib')
+                root.children().last() + pomConfig
+            }
+        }
     }
 }
 
