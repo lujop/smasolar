@@ -7,6 +7,11 @@ sudo: false
 before_install:
   - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
 
+branches:
+  only:
+    - master
+    - release
+
 jobs:
   include:
     - env: JDK='Oracle JDK 10'
