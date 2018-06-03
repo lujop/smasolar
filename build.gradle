@@ -42,6 +42,7 @@ dependencies {
     compile group: 'io.netty', name: 'netty-all', version: '4.1.25.Final'
     compile 'com.digitalpetri.modbus:modbus-master-tcp:1.1.0'
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    compile "io.reactivex.rxjava2:rxjava:2.1.14"
 
     runtime group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 

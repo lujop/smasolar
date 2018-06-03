@@ -2,8 +2,6 @@ package cat.joanpujol.smasolar.emeter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.netty.buffer.ByteBufUtil;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.embedded.EmbeddedChannel;
 import io.netty.channel.socket.DatagramPacket;
 import java.net.InetSocketAddress;
@@ -14,14 +12,11 @@ import org.junit.jupiter.api.Test;
 @DisplayName("Decodes emeter message")
 class EMeterContentDecoderTest {
 
-  private final String CORRECT_MSG =
-      "534d4100000402a000000001024400106069015d71551f2293ee13a200010400000018cb0001080000000003950e518000020400000000000002080000000000036ae9a800030400000002c70003080000000000bb21c1e80004040000000000000408000000000011fd0e8800090400000018f30009080000000003bf62e888000a040000000000000a0800000000000f22b3c0000d0400000003e200150400000018cb0015080000000003950e518000160400000000000016080000000000036ae9a800170400000002c70017080000000000bb21c1e80018040000000000001808000000000011fd0e88001d0400000018f3001d080000000003bf62e888001e040000000000001e0800000000000f22b3c0001f040000000bb700200400000371dd00210400000003e20029040000000000002908000000000000000000002a040000000000002a08000000000000000000002b040000000000002b08000000000000000000002c040000000000002c0800000000000000000000310400000000000031080000000000000000000032040000000000003208000000000000000000003304000000000000340400000000000035040000000000003d040000000000003d08000000000000000000003e040000000000003e08000000000000000000003f040000000000003f08000000000000000000004004000000000000400800000000000000000000450400000000000045080000000000000000000046040000000000004608000000000000000000004704000000000000480400000000000049040000000000900000000200105200000000";
-
   @Test
   @DisplayName("Decode correct message")
   void parseMessage() {
     var channel = new EmbeddedChannel(new EMeterContentDecoder());
-    var msgDecoded = Unpooled.wrappedBuffer(ByteBufUtil.decodeHexDump(CORRECT_MSG));
+    var msgDecoded = EMeterTestUtils.getCorrectMessage();
     DatagramPacket packet = new DatagramPacket(msgDecoded, new InetSocketAddress(9522));
 
     assertThat(channel.writeInbound(packet)).isTrue().as("Packet correctly queued");
@@ -159,7 +154,7 @@ class EMeterContentDecoderTest {
   @DisplayName("Decode incorrect message")
   void parseIncorrectMessage() {
     var channel = new EmbeddedChannel(new EMeterContentDecoder());
-    var msgDecoded = Unpooled.wrappedBuffer(ByteBufUtil.decodeHexDump(CORRECT_MSG));
+    var msgDecoded = EMeterTestUtils.getCorrectMessage();
     msgDecoded.resetWriterIndex().writeByte(255); // Put an incorrect byte at SMA header
     DatagramPacket packet = new DatagramPacket(msgDecoded, new InetSocketAddress(9522));
     assertThat(channel.writeInbound(packet)).isTrue().as("Packet correctly queued");
