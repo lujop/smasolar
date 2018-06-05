@@ -53,21 +53,44 @@ public class EMeterConfig {
 
     private Builder() {}
 
+    /**
+     * Multicast address and port to use to listen for Emeter lectures. If none specified default
+     * value is 239.12.255.254:9522
+     *
+     * @param val address to connect
+     */
     public Builder address(InetSocketAddress val) {
       address = val;
       return this;
     }
 
+    /**
+     * Network interface name to use to join multicast group. If none specified first one that has a
+     * IPV4 address is used
+     *
+     * @param val address to connect
+     */
     public Builder multicastOutputInterface(String val) {
       multicastOutputInterface = val;
       return this;
     }
 
+    /**
+     * EventLoopGroup to use handle channel handlers
+     *
+     * @param val
+     * @return
+     */
     public Builder eventLoopGroup(EventLoopGroup val) {
       eventLoopGroup = val;
       return this;
     }
 
+    /**
+     * Build configuration
+     *
+     * @return
+     */
     public EMeterConfig build() {
       return new EMeterConfig(this);
     }

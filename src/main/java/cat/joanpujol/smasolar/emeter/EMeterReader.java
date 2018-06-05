@@ -2,18 +2,23 @@ package cat.joanpujol.smasolar.emeter;
 
 import cat.joanpujol.smasolar.emeter.impl.EMeterCreateObservableImpl;
 import io.reactivex.Observable;
+import io.reactivex.Scheduler;
 
-/**
- * Subscribes to EMETER multicast group and contiously retrieve and prints to console it's lectures
- */
+/** Provides an interface to cotinously observe emeter lectures by joining Emeter multicast group */
 public class EMeterReader {
 
   private EMeterConfig config;
 
+  /** Creates an instance using default configuration */
   public EMeterReader() {
     this(EMeterConfig.newBuilder().build());
   }
 
+  /**
+   * Creates an instance usen given config
+   *
+   * @param config Configuration
+   */
   public EMeterReader(EMeterConfig config) {
     this.config = config;
   }
@@ -21,8 +26,10 @@ public class EMeterReader {
   /**
    * Creates a cold observable that starts to listens to EMeter lectures on first subscription. The
    * observable can be shared to multiple subscribers that will receive same results without
-   * creating multiple sockets. But when last subscriber finish listening internal ressources are
-   * released and observable is completed
+   * creating multiple sockets.
+   *
+   * <p>Subscribed observers should not do blocking operations or must use it's own scheduler using
+   * {@link Observable#observeOn(Scheduler)}}
    */
   public final Observable<EMeterLecture> create() {
     return Observable.create(createObservable()).share();
