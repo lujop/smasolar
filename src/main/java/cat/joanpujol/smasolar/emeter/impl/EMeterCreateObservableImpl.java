@@ -61,11 +61,6 @@ public class EMeterCreateObservableImpl implements ObservableOnSubscribe<EMeterL
               throws Exception {
             emitter.onNext(msg);
           }
-
-          @Override
-          public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-            super.channelReadComplete(ctx);
-          }
         };
     startMulticastChannelReceiver(processor);
   }
