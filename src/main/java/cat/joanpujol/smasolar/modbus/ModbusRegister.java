@@ -41,7 +41,7 @@ public class ModbusRegister<T> implements ModbusValue<T> {
   public static final ModbusRegister<Number> CURRENT_BATTERY_STATE_OF_CHARGE =
       new ModbusRegister<>(30845, "Current battery state of charge (%)", U32, FIX0, READ_ONLY);
   public static final ModbusRegister<Number> NOMINAL_CAPACITY_BATTERY =
-      new ModbusRegister<>(40187, "Nominal capacity of the battery (%)", U32, FIX0, READ_ONLY);
+      new ModbusRegister<>(40187, "Nominal capacity of the battery (Wh)", U32, FIX0, READ_ONLY);
 
   private int registerNumber;
   private String desription;
@@ -50,7 +50,7 @@ public class ModbusRegister<T> implements ModbusValue<T> {
   private ModbusAccesType accesType;
   private Class type;
 
-  ModbusRegister(
+  public ModbusRegister(
       int registerNumber,
       String desription,
       ModbusDataType dataType,

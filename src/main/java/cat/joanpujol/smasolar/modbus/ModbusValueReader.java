@@ -3,6 +3,7 @@ package cat.joanpujol.smasolar.modbus;
 import static cat.joanpujol.smasolar.modbus.ModbusDataType.U64;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.util.ByteProcessor;
 import io.netty.util.CharsetUtil;
 import java.math.BigInteger;
 
@@ -39,7 +40,11 @@ public class ModbusValueReader {
           return null;
         }
       case STR32:
-        return from.readBytes(32).toString(CharsetUtil.UTF_8);
+        var strvalue = from.readBytes(32);
+        int firstNull = strvalue.forEachByte(ByteProcessor.FIND_NUL);
+        if (firstNull == 0) return null;
+        else if (firstNull != -1) return strvalue.slice(0, firstNull).toString(CharsetUtil.UTF_8);
+        else return strvalue.toString(CharsetUtil.UTF_8);
       default:
         throw new IllegalArgumentException("Unrecognized " + dataType);
     }
