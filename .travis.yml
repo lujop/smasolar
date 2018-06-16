@@ -27,6 +27,8 @@ jobs:
       script:
           - ./gradlew --version
           - ./gradlew test
+          - ./gradlew jacocoTestReport
+          - bash <(curl -s https://codecov.io/bash)
     - stage: deploy_snapshot
       env: JDK='Oracle JDK 10'
       install: . ./install-jdk.sh -F 10 -L BCL
