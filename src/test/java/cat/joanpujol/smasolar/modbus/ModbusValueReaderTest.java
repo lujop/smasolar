@@ -50,7 +50,9 @@ class ModbusValueReaderTest {
   @Test
   @DisplayName("Read TM")
   void readTM() {
-    var instant = instance.read(decodeHexDump("5b2423d8"), U32, TM); //It's the same as DT?, not able to check it
+    var instant =
+        instance.read(
+            decodeHexDump("5b2423d8"), U32, TM); // It's the same as DT?, not able to check it
     assertThat(instant).isEqualTo("2018-06-15T20:38:48Z");
   }
 
@@ -127,8 +129,7 @@ class ModbusValueReaderTest {
   @Test
   @DisplayName("Read RAW value")
   void readRAW() {
-    assertThat(instance.read(decodeHexDump("714f0850"), U32, RAW))
-            .isEqualTo("1901004880");
+    assertThat(instance.read(decodeHexDump("714f0850"), U32, RAW)).isEqualTo("1901004880");
   }
 
   @Test
@@ -148,10 +149,10 @@ class ModbusValueReaderTest {
   void readUTF8Data() throws UnknownHostException {
     assertThat(
             instance.read(
-                    decodeHexDump("30303a34303a41443a39433a43313a3243000000000000000000000000000000"),
-                    STR32,
-                    UTF8))
-            .isEqualTo("00:40:AD:9C:C1:2C");
+                decodeHexDump("30303a34303a41443a39433a43313a3243000000000000000000000000000000"),
+                STR32,
+                UTF8))
+        .isEqualTo("00:40:AD:9C:C1:2C");
   }
 
   private static ByteBuf decodeHexDump(String hexdumpValue) {

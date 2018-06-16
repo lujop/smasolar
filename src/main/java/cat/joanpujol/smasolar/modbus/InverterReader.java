@@ -60,12 +60,30 @@ public class InverterReader {
     read(new ModbusRegister(30005, "RAW serial number", U32, RAW, READ_ONLY), masterStorage, 3);
     read(new ModbusRegister(30849, "Battery temp", S32, TEMP, READ_ONLY), masterStorage, 3);
     read(new ModbusRegister(30953, "Battery temp2", S32, TEMP, READ_ONLY), masterStorage, 3);
-    read(new ModbusRegister(40649, "Time of automatic update", U32, TM, READ_ONLY), masterStorage, 3);
-    read(new ModbusRegister(40669, "Time of automatic update", U32, TM, READ_ONLY), masterStorage, 3);
-    read(new ModbusRegister(40671, "Time of automatic update", U32, TM, READ_ONLY), masterStorage, 3);
-    read(new ModbusRegister(40687, "Time of automatic update", U32, TM, READ_ONLY), masterStorage, 3);
-    read(new ModbusRegister(40761, "Time of automatic update", U32, TM, READ_ONLY), masterStorage, 3);
-    read(new ModbusRegister(40497, "Battery serial number", STR32, UTF8, READ_ONLY), masterStorage, 3);
+    read(
+        new ModbusRegister(40649, "Time of automatic update", U32, TM, READ_ONLY),
+        masterStorage,
+        3);
+    read(
+        new ModbusRegister(40669, "Time of automatic update", U32, TM, READ_ONLY),
+        masterStorage,
+        3);
+    read(
+        new ModbusRegister(40671, "Time of automatic update", U32, TM, READ_ONLY),
+        masterStorage,
+        3);
+    read(
+        new ModbusRegister(40687, "Time of automatic update", U32, TM, READ_ONLY),
+        masterStorage,
+        3);
+    read(
+        new ModbusRegister(40761, "Time of automatic update", U32, TM, READ_ONLY),
+        masterStorage,
+        3);
+    read(
+        new ModbusRegister(40497, "Battery serial number", STR32, UTF8, READ_ONLY),
+        masterStorage,
+        3);
   }
 
   private static void read(ModbusValue reg, ModbusTcpMaster master, int unitId) {
