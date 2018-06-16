@@ -1,4 +1,4 @@
-# smasolar library   [![Build Status](https://travis-ci.com/lujop/smasolarlib.svg?branch=master)](https://travis-ci.com/lujop/smasolarlib)
+# lujop's smasolar library   [![Build Status](https://travis-ci.com/lujop/smasolarlib.svg?branch=master)](https://travis-ci.com/lujop/smasolarlib) [![codecov](https://codecov.io/gh/lujop/smasolarlib/branch/master/graph/badge.svg)](https://codecov.io/gh/lujop/smasolarlib)
 Library with interfaces to some sma devices.
 This is a personal project to interactuate with some SMA devices that I've at home.
 
