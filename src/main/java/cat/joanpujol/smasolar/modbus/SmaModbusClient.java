@@ -28,16 +28,16 @@ public class SmaModbusClient implements ModbusRegisterReader {
   }
 
   private ModbusTcpMaster ensureModbusClient() {
-    if (modbusClient == null) createModbusClient();
+    if (modbusClient == null) modbusClient = createModbusClient();
     return modbusClient;
   }
 
-  private void createModbusClient() {
+  protected ModbusTcpMaster createModbusClient() {
     ModbusTcpMasterConfig.Builder configurationBuilder =
         new ModbusTcpMasterConfig.Builder(address).setPort(port).setTimeout(DEFAULT_TIMEOUT);
     customizeModbusConfiguration(configurationBuilder);
     ModbusTcpMasterConfig config = configurationBuilder.build();
-    modbusClient = new ModbusTcpMaster(config);
+    return new ModbusTcpMaster(config);
   }
 
   /**

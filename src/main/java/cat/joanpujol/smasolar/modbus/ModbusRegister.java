@@ -84,6 +84,22 @@ public class ModbusRegister<T> {
           U32,
           FIX0,
           READ_ONLY);
+  public static final ModbusRegister<Number> MAXIMUM_CHARGE_BATTERY_POWER =
+      new ModbusRegister<>(
+          40189,
+          "MAXIMUM_CHARGE_BATTERY_POWER",
+          "Maximum charge power of the battery (W)",
+          U32,
+          FIX0,
+          READ_ONLY);
+  public static final ModbusRegister<Number> MAXIMUM_DISCHARGE_BATTERY_POWER =
+      new ModbusRegister<>(
+          40191,
+          "MAXIMUM_DISCHARGE_BATTERY_POWER",
+          "Maximum discharge power of the battery (W)",
+          U32,
+          FIX0,
+          READ_ONLY);
 
   private String name;
   private int registerNumber;

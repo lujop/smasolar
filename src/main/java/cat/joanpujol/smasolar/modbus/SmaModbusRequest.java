@@ -134,7 +134,10 @@ public class SmaModbusRequest {
         Collections.sort(registers, Comparator.comparing(ModbusRegister::getRegisterNumber));
         ModbusRegister last = registers.get(registers.size() - 1);
         ModbusRegister first = registers.get(0);
-        int numberOfRegistersToRead = last.getRegisterNumber() - first.getRegisterNumber();
+        int numberOfRegistersToRead =
+            last.getRegisterNumber()
+                - first.getRegisterNumber()
+                + last.getDataType().getLength() / 2;
         int maxNumberOfregisters;
         maxNumberOfregisters = getMaxNumberOfRegisters(originalRequest);
         if (numberOfRegistersToRead > maxNumberOfregisters) {
@@ -166,13 +169,11 @@ public class SmaModbusRequest {
       requests.add(current);
 
       for (ModbusRegister register : originalRequest.getRegisters()) {
-        if (isAtomicIfIAdd(current, register)) {
-          current.registers.add(register);
-        } else {
+        if (!isAtomicIfIAdd(current, register)) {
           current = originalRequest.createCopyWithoutRegisters();
           requests.add(current);
-          current.registers.add(register);
         }
+        current.registers.add(register);
       }
 
       requests.forEach(
