@@ -1,9 +1,6 @@
 package cat.joanpujol.smasolar.modbus;
 
-import static cat.joanpujol.smasolar.modbus.ModbusAccesType.READ_ONLY;
-import static cat.joanpujol.smasolar.modbus.ModbusDataFormat.*;
-import static cat.joanpujol.smasolar.modbus.ModbusDataType.*;
-
+import cat.joanpujol.smasolar.modbus.devices.DefaultSmaModbusDevice;
 import com.digitalpetri.modbus.master.ModbusTcpMaster;
 import com.digitalpetri.modbus.master.ModbusTcpMasterConfig;
 import com.digitalpetri.modbus.requests.ReadInputRegistersRequest;
@@ -45,48 +42,69 @@ public class InverterReader {
     read(ModbusRegister.CURRENT_BATTERY_STATE_OF_CHARGE, masterStorage, 3);
     read(ModbusRegister.NOMINAL_CAPACITY_BATTERY, masterStorage, 3);
 
-    read(new ModbusRegister(30051, "Device class", U32, ENUM, READ_ONLY), masterDataManager, 1);
-    read(
-        new ModbusRegister(40037, "Nominal battery voltage", U32, FIX0, READ_ONLY),
-        masterStorage,
-        3);
-    read(new ModbusRegister(30059, "Software version", U32, FW, READ_ONLY), masterStorage, 3);
-    read(
-        new ModbusRegister(31389, "Software version battert system", U32, FW, READ_ONLY),
-        masterStorage,
-        3);
-    read(new ModbusRegister(41205, "HW", U32, HW, READ_ONLY), masterStorage, 3);
-    read(new ModbusRegister(40159, "IPV4", STR32, IP4, READ_ONLY), masterStorage, 3);
-    read(new ModbusRegister(30005, "RAW serial number", U32, RAW, READ_ONLY), masterStorage, 3);
-    read(new ModbusRegister(30849, "Battery temp", S32, TEMP, READ_ONLY), masterStorage, 3);
-    read(new ModbusRegister(30953, "Battery temp2", S32, TEMP, READ_ONLY), masterStorage, 3);
-    read(
-        new ModbusRegister(40649, "Time of automatic update", U32, TM, READ_ONLY),
-        masterStorage,
-        3);
-    read(
-        new ModbusRegister(40669, "Time of automatic update", U32, TM, READ_ONLY),
-        masterStorage,
-        3);
-    read(
-        new ModbusRegister(40671, "Time of automatic update", U32, TM, READ_ONLY),
-        masterStorage,
-        3);
-    read(
-        new ModbusRegister(40687, "Time of automatic update", U32, TM, READ_ONLY),
-        masterStorage,
-        3);
-    read(
-        new ModbusRegister(40761, "Time of automatic update", U32, TM, READ_ONLY),
-        masterStorage,
-        3);
-    read(
-        new ModbusRegister(40497, "Battery serial number", STR32, UTF8, READ_ONLY),
-        masterStorage,
-        3);
+    SmaModbusClient client =
+        new SmaModbusClient("192.168.1.104", 502, new DefaultSmaModbusDevice());
+    client
+        .readRegister(ModbusRegister.NOMINAL_CAPACITY_BATTERY)
+        .subscribe(value -> System.out.println("Battery Rx: " + value));
+
+    SmaModbusRequest request =
+        new SmaModbusRequest.Builder(SmaModbusRequest.Type.READ)
+            .addRegister(ModbusRegister.NOMINAL_CAPACITY_BATTERY)
+            .addRegister(ModbusRegister.CURRENT_BATTERY_STATE_OF_CHARGE)
+            .build();
+    client
+        .read(request)
+        .subscribe(
+            response -> {
+              response.getAllRegisters().forEach((k, v) -> System.out.println(" - " + k + "=" + v));
+            },
+            error -> error.printStackTrace());
+
+    //    read(new ModbusRegister(30051, "Device class", U32, ENUM, READ_ONLY), masterDataManager,
+    // 1);
+    //    read(
+    //        new ModbusRegister(40037, "Nominal battery voltage", U32, FIX0, READ_ONLY),
+    //        masterStorage,
+    //        3);
+    //    read(new ModbusRegister(30059, "Software version", U32, FW, READ_ONLY), masterStorage, 3);
+    //    read(
+    //        new ModbusRegister(31389, "Software version battert system", U32, FW, READ_ONLY),
+    //        masterStorage,
+    //        3);
+    //    read(new ModbusRegister(41205, "HW", U32, HW, READ_ONLY), masterStorage, 3);
+    //    read(new ModbusRegister(40159, "IPV4", STR32, IP4, READ_ONLY), masterStorage, 3);
+    //    read(new ModbusRegister(30005, "RAW serial number", U32, RAW, READ_ONLY), masterStorage,
+    // 3);
+    //    read(new ModbusRegister(30849, "Battery temp", S32, TEMP, READ_ONLY), masterStorage, 3);
+    //    read(new ModbusRegister(30953, "Battery temp2", S32, TEMP, READ_ONLY), masterStorage, 3);
+    //    read(
+    //        new ModbusRegister(40649, "Time of automatic update", U32, TM, READ_ONLY),
+    //        masterStorage,
+    //        3);
+    //    read(
+    //        new ModbusRegister(40669, "Time of automatic update", U32, TM, READ_ONLY),
+    //        masterStorage,
+    //        3);
+    //    read(
+    //        new ModbusRegister(40671, "Time of automatic update", U32, TM, READ_ONLY),
+    //        masterStorage,
+    //        3);
+    //    read(
+    //        new ModbusRegister(40687, "Time of automatic update", U32, TM, READ_ONLY),
+    //        masterStorage,
+    //        3);
+    //    read(
+    //        new ModbusRegister(40761, "Time of automatic update", U32, TM, READ_ONLY),
+    //        masterStorage,
+    //        3);
+    //    read(
+    //        new ModbusRegister(40497, "Battery serial number", STR32, UTF8, READ_ONLY),
+    //        masterStorage,
+    //        3);
   }
 
-  private static void read(ModbusValue reg, ModbusTcpMaster master, int unitId) {
+  private static void read(ModbusRegister reg, ModbusTcpMaster master, int unitId) {
     var request =
         new ReadInputRegistersRequest(reg.getRegisterNumber(), reg.getDataType().getLength() / 2);
     master
