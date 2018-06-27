@@ -13,14 +13,16 @@ The initial scope of the project is to have interface to operate with:
 ## EMeter
 Read broadcasted emeter's lectures indefinitely:
 
+```java
     EMeterConfig eMeterConfig = EMeterConfig.newBuilder().build();
     new EMeterReader(eMeterConfig).create().subscribe(lecture -> {
      System.out.println("Readed lecture "+lecture);
     });
-  
+```
 ## Modbus
 Read several register from SMA device. Library automatically do several requests and join them if registers can't be read in a single request:
 
+```java
     SmaModbusClient client = new SmaModbusClient("192.168.1.1", 502, device);
     SmaModbusRequest request =
         new SmaModbusRequest.Builder(SmaModbusRequest.Type.READ)
@@ -32,5 +34,5 @@ Read several register from SMA device. Library automatically do several requests
     client.read(request).subscribe(response -> {
       response.getAllRegisters().forEach( (reg,val)-> System.out.println(""+reg+":"+val));
     }
-           
+```           
   
