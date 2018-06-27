@@ -1,11 +1,9 @@
 language: java
 
-dist: trusty
-sudo: false
-
-# Get latest install-jdk.sh script
-before_install:
-  - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
+jdk:
+  - openjdk10
+  - oraclejdk10
+  - openjdk11
 
 branches:
   only:
@@ -22,18 +20,12 @@ stages:
 jobs:
   include:
     - stage: build
-      env: JDK='Oracle JDK 10'
-      install: . ./install-jdk.sh -F 10 -L BCL
       script:
           - ./gradlew --version
           - ./gradlew test
           - ./gradlew jacocoTestReport
           - bash <(curl -s https://codecov.io/bash)
     - stage: deploy_snapshot
-      env: JDK='Oracle JDK 10'
-      install: . ./install-jdk.sh -F 10 -L BCL
       script: ./gradlew artifactoryPublish -x test -Dsnapshot=true -Dbintray.user=$BINTRAY_USER -Dbintray.key=$BINTRAY_KEY -Dbuild.number=$TRAVIS_BUILD_NUMBER
     - stage: deploy_release
-      env: JDK='Oracle JDK 10'
-      install: . ./install-jdk.sh -F 10 -L BCL
       script: ./gradlew artifactoryPublish -x test -Dsnapshot=false -Dbintray.user=$BINTRAY_USER -Dbintray.key=$BINTRAY_KEY -Dbuild.number=$TRAVIS_BUILD_NUMBER
